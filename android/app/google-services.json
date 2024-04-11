@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "295501132099",
+    "project_id": "gpay-clone-27681",
+    "storage_bucket": "gpay-clone-27681.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:295501132099:android:b69cb6e1185593e114fff6",
+        "android_client_info": {
+          "package_name": "com.example.gpay_clone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMIEqknEYsS7BoCDxXTlArXNQpv0i_EHg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
