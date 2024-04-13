@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class TransactionModel {
   final String amount;
@@ -41,6 +42,7 @@ class TransactionModel {
 
   factory TransactionModel.fromSnapshot(DocumentSnapshot snapshot) {
     Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+    // String time = "";
 
     return TransactionModel(
         amount: data['amount'] ?? '',

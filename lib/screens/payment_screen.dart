@@ -57,8 +57,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
           _amountController.text,
           _bankingNameController.text,
           senderHexColor);
-      await FireStoreMethods().addTransactionDetailsNew(sender_id, reciever_id,
-          _amountController.text, _bankingNameController.text, senderHexColor);
     }
     if (!check) {
       //TODO : Add into a dummy account to track values.
@@ -193,42 +191,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     child: SvgPicture.asset('assets/images/secure.svg'),
                   ),
                 ),
-                // ConstrainedBox(
-                // constraints: BoxConstraints(
-                //     maxHeight: heightOfTextField,
-                //     minWidth: fullScreenWidth * 0.5,
-                //     maxWidth: fullScreenWidth * 0.8),
-                //   child: TextField(
-                //     readOnly: true,
-                //     enableInteractiveSelection: false,
-                //     decoration:
-                //         const InputDecoration(border: InputBorder.none),
-                //     textAlign: TextAlign.center,
-                //     controller: _bankingNameController,
-                //     style:
-                //         TextStyle(fontFamily: 'Product Sans', fontSize: 15),
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: heightOfTextField,
-                //   width: fullScreenWidth * 0.75,
-                //   child: TextField(
-                //     readOnly: true,
-                //     enableInteractiveSelection: false,
-                //     decoration:
-                //         const InputDecoration(border: InputBorder.none),
-                //     textAlign: TextAlign.center,
-                //     controller: _bankingNameController,
-                //     style:
-                //         TextStyle(fontFamily: 'Product Sans', fontSize: 15),
-                //   ),
-                // ),
-                // ConstrainedBox(
-                //   constraints: BoxConstraints(
-                //       maxHeight: heightOfTextField,
-                //       minWidth: fullScreenWidth * 0.5,
-                //       maxWidth: fullScreenWidth * 0.8),
-                //   child:
                 Text(
                   _bankingNameController.text,
                   style: TextStyle(
@@ -349,17 +311,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
       },
     );
     await _addTransaction(user.uid, _upiIDController.text, user.hexColor);
-    Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pop(context);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => PaymentSuccessWrapper(
-                    amount: _amountController.text,
-                    payingName: _payingNameController.text,
-                    upiID: _upiIDController.text,
-                    bankingName: _bankingNameController.text,
-                  )));
-    });
+    // Future.delayed(const Duration(seconds: 3), () {
+    Navigator.pop(context);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PaymentSuccessWrapper(
+                  amount: _amountController.text,
+                  payingName: _payingNameController.text,
+                  upiID: _upiIDController.text,
+                  bankingName: _bankingNameController.text,
+                )));
+    // }
+    // );
   }
 }

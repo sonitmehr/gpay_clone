@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gpay_clone/models/transaction_model.dart';
 import 'package:gpay_clone/services/firestore_methods.dart';
@@ -38,6 +39,14 @@ class _UnderDevelopmentScreenState extends State<UnderDevelopmentScreen> {
                   fontSize: 17, // Example font size
                   fontWeight: FontWeight.w400, // Example font weight
                 ),
+              ),
+            ),
+            SizedBox(
+              width: 20,
+              height: 14,
+              child: SvgPicture.asset(
+                'assets/images/check.svg',
+                fit: BoxFit.fitHeight,
               ),
             ),
             ElevatedButton(

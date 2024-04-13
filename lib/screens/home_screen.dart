@@ -52,149 +52,145 @@ class _HomeScreenState extends State<HomeScreen> {
     model.User user = Provider.of<UserProvider>(context).getUser;
     Color iconbackgroundColor = hexToColor(user.hexColor);
     // final UserProvider userProvider = Provider.of<UserProvider>(context);
-    return SafeArea(
-      child: Scaffold(
-        key: _scaffoldKey,
-        drawer: const HomeScreenDrawer(),
-        backgroundColor: backgroundColor,
-        body: (user.uid == "")
-            ? const Center(
-                child: CircularProgressIndicator(color: primaryColor),
-              )
-            : SingleChildScrollView(
-                child: Column(children: [
-                  Padding(
+    return Scaffold(
+      key: _scaffoldKey,
+      drawer: const HomeScreenDrawer(),
+      backgroundColor: backgroundColor,
+      body: (user.uid == "")
+          ? const Center(
+              child: CircularProgressIndicator(color: primaryColor),
+            )
+          : SingleChildScrollView(
+              child: Column(children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: fullScreenWidth * 0.06,
+                      vertical: fullScreenHeight * 0.06),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                          width: fullScreenWidth * 0.71,
+                          height: fullScreenHeight * 0.059,
+                          child: const CustomSearchBar()),
+                      GestureDetector(
+                        onTap: () => _scaffoldKey.currentState?.openDrawer(),
+                        child: UserProfileIcon(
+                          backgroundColor: iconbackgroundColor,
+                          radius: 17,
+                          name: user.name,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                AssetImageViewer(
+                    assetImage: homeScreenImage,
+                    height: fullScreenHeight * 0.199),
+                SizedBox(
+                  height: fullScreenHeight * 0.012,
+                ),
+                SizedBox(
+                  height: fullScreenHeight * 0.24,
+                  child: GridView.count(
+                    crossAxisCount: 4, // Number of columns
+                    childAspectRatio: 1.0, // Aspect ratio
                     padding: EdgeInsets.symmetric(
-                        horizontal: fullScreenWidth * 0.06,
-                        vertical: fullScreenHeight * 0.019),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                            width: fullScreenWidth * 0.71,
-                            height: fullScreenHeight * 0.059,
-                            child: const CustomSearchBar()),
-                        GestureDetector(
-                          onTap: () => _scaffoldKey.currentState?.openDrawer(),
-                          child: UserProfileIcon(
-                            backgroundColor: iconbackgroundColor,
-                            radius: 17,
-                            name: user.name,
-                          ),
-                        )
-                      ],
-                    ),
+                        vertical: fullScreenHeight * 0.009,
+                        horizontal: fullScreenWidth * 0.02), // Padding
+                    children: List.generate(8, (index) {
+                      // Generate 8 grid items
+                      return GridTile(
+                        child: SizedBox(
+                            width: iconWidth,
+                            height: iconHeight,
+                            child: callToActionIcon(
+                                context,
+                                iconImagePath[index],
+                                iconTextList[index],
+                                (context) => iconRedirectList[index])),
+                      );
+                    }),
                   ),
-                  AssetImageViewer(
-                      assetImage: homeScreenImage,
-                      height: fullScreenHeight * 0.199),
-                  SizedBox(
-                    height: fullScreenHeight * 0.012,
-                  ),
-                  SizedBox(
-                    height: fullScreenHeight * 0.24,
-                    child: GridView.count(
-                      crossAxisCount: 4, // Number of columns
-                      childAspectRatio: 1.0, // Aspect ratio
-                      padding: EdgeInsets.symmetric(
-                          vertical: fullScreenHeight * 0.009,
-                          horizontal: fullScreenWidth * 0.02), // Padding
-                      children: List.generate(8, (index) {
-                        // Generate 8 grid items
-                        return GridTile(
-                          child: SizedBox(
-                              width: iconWidth,
-                              height: iconHeight,
-                              child: callToActionIcon(
-                                  context,
-                                  iconImagePath[index],
-                                  iconTextList[index],
-                                  (context) => iconRedirectList[index])),
-                        );
-                      }),
-                    ),
-                  ),
+                ),
 
-                  // iconsFirstRow(context, iconWidth, iconHeight),
-                  // iconsSecondRow(context, iconWidth, iconHeight),
-                  Center(
-                    child: Container(
-                        width: fullScreenWidth * 0.41,
-                        padding: EdgeInsets.symmetric(
-                            vertical: fullScreenHeight * 0.0049,
-                            horizontal: fullScreenWidth * 0.035),
-                        decoration: BoxDecoration(
-                            border:
-                                Border.all(width: 1, color: upiIDBorderColor),
-                            borderRadius: BorderRadius.circular(16)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: fullScreenWidth * 0.25,
-                              child: const FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    'UPI ID: vpa@bank',
-                                    style:
-                                        TextStyle(fontFamily: 'Product Sans'),
-                                  )),
-                            ),
-                            SizedBox(
-                              width: fullScreenWidth * 0.05,
-                              child: const FittedBox(
+                // iconsFirstRow(context, iconWidth, iconHeight),
+                // iconsSecondRow(context, iconWidth, iconHeight),
+                Center(
+                  child: Container(
+                      width: fullScreenWidth * 0.41,
+                      padding: EdgeInsets.symmetric(
+                          vertical: fullScreenHeight * 0.0049,
+                          horizontal: fullScreenWidth * 0.035),
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 1, color: upiIDBorderColor),
+                          borderRadius: BorderRadius.circular(16)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: fullScreenWidth * 0.25,
+                            child: const FittedBox(
                                 fit: BoxFit.scaleDown,
-                                child: Icon(
-                                  Icons.copy_sharp,
-                                ),
+                                child: Text(
+                                  'UPI ID: vpa@bank',
+                                  style: TextStyle(fontFamily: 'Product Sans'),
+                                )),
+                          ),
+                          SizedBox(
+                            width: fullScreenWidth * 0.05,
+                            child: const FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Icon(
+                                Icons.copy_sharp,
                               ),
                             ),
-                          ],
-                        )),
-                  ),
-                  SizedBox(
-                    height: fullScreenHeight * 0.062,
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: fullScreenWidth * 0.061,
-                          vertical: fullScreenHeight * 0.019),
-                      child: const Text(
-                        'People',
-                        style:
-                            TextStyle(fontSize: 25, fontFamily: 'Product Sans'),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: fullScreenHeight * 0.186,
-                      child: const RecentPeople()),
-                  ArrowListTile(
-                    icon: const Icon(
-                      Icons.history,
-                      color: gpayBlue,
-                    ),
-                    text: "Show transaction history",
-                    builder: (context) => const TransactionHistory(),
-                  ),
-                  AssetImageViewer(
-                      assetImage: inviteFriendsImage,
-                      height: fullScreenHeight * 0.37),
-                  Padding(
+                          ),
+                        ],
+                      )),
+                ),
+                SizedBox(
+                  height: fullScreenHeight * 0.062,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
                     padding: EdgeInsets.symmetric(
-                        vertical: fullScreenHeight * 0.04,
-                        horizontal: fullScreenWidth * 0.08),
+                        horizontal: fullScreenWidth * 0.061,
+                        vertical: fullScreenHeight * 0.019),
                     child: const Text(
-                      'Showing businesses based on your location - Learn more',
-                      textAlign: TextAlign.center,
-                      style: bottomTextStyle,
+                      'People',
+                      style:
+                          TextStyle(fontSize: 25, fontFamily: 'Product Sans'),
                     ),
-                  )
-                ]),
-              ),
-      ),
+                  ),
+                ),
+                SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: fullScreenHeight * 0.186,
+                    child: const RecentPeople()),
+                ArrowListTile(
+                  icon: const Icon(
+                    Icons.history,
+                    color: gpayBlue,
+                  ),
+                  text: "Show transaction history",
+                  builder: (context) => const TransactionHistory(),
+                ),
+                AssetImageViewer(
+                    assetImage: inviteFriendsImage,
+                    height: fullScreenHeight * 0.37),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: fullScreenHeight * 0.04,
+                      horizontal: fullScreenWidth * 0.08),
+                  child: const Text(
+                    'Showing businesses based on your location - Learn more',
+                    textAlign: TextAlign.center,
+                    style: bottomTextStyle,
+                  ),
+                )
+              ]),
+            ),
     );
   }
 }

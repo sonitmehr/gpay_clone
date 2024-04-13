@@ -17,7 +17,7 @@ class UserProfileIcon extends StatelessWidget {
     return SizedBox(
       width: 60,
       child: CircleAvatar(
-        backgroundColor: colors.upiIDBorderColor,
+        backgroundColor: const Color.fromARGB(0, 189, 192, 190),
         radius: radius + 1,
         child: CircleAvatar(
           radius: radius,

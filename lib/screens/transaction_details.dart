@@ -35,12 +35,13 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   bool isLoading = true;
   bool isMore = true;
   bool loadedTotalPages = false;
-
+  bool loadMoreTransactions = true;
   double totalTransactionAmount = 0;
   int numberOfDays = 0;
   int pageNo = 1;
   List<TransactionModel> transactionDetails = [];
   final ScrollController _scrollController = ScrollController();
+  double previousScrollPosition = 0;
   Future<void> _getTransactionDetails() async {
     List<String> transactions = await FireStoreMethods()
         .getTransactionDetailsHistory(widget.sender_id, widget.reciever_id);
@@ -56,14 +57,19 @@ class _TransactionDetailsState extends State<TransactionDetails> {
       isLoading = false;
     });
 
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(seconds: 1), () {
       if (_scrollController.hasClients) {
-        // _scrollDown();
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(seconds: 2),
+          curve: Curves.fastOutSlowIn,
+        );
       }
     });
   }
 
   Future<void> _getTransactionDetailsNew() async {
+    if (loadMoreTransactions == false) return;
     List<String> firstTransactions = [];
     setState(() {
       isMore = true;
@@ -96,12 +102,32 @@ class _TransactionDetailsState extends State<TransactionDetails> {
     }
 
     tempTransactionDetails.sort((a, b) => b.time.compareTo(a.time));
+    if (_scrollController.hasClients) {
+      previousScrollPosition = _scrollController.offset;
+    } else {
+      previousScrollPosition = 300;
+    }
     transactionDetails.addAll(tempTransactionDetails);
     numberOfDays = getNumberOfDays(transactionDetails);
 
     setState(() {
       isLoading = false;
     });
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (_scrollController.hasClients) {
+        _scrollDown(400);
+      }
+    });
+  }
+
+  Future<void> loadFullTransactions() async {
+    loadMoreTransactions = false;
+    isMore = false;
+    setState(() {
+      transactionDetails.clear();
+      isLoading = true;
+    });
+    await _getTransactionDetails();
   }
 
   @override
@@ -142,6 +168,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
         total: totalTransactionAmount.toStringAsFixed(2),
         name: widget.reciever_name,
         hexColor: widget.reciever_hex_color,
+        loadFullTransactions: () async => await loadFullTransactions(),
       ),
       body: (isLoading)
           ? const Center(
@@ -161,7 +188,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                     child: ListView.builder(
                         shrinkWrap: true,
                         reverse: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
+                        // physics: const PositionRetainedScrollPhysics(),
                         itemCount: (isMore)
                             ? transactionDetails.length + 1
                             : transactionDetails.length,
@@ -171,8 +199,10 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                             TransactionModel transactionDetail =
                                 transactionDetails[index];
                             return TransactionDetailsCard(
-                                amount: transactionDetail.amount,
-                                time: transactionDetail.time);
+                              amount: transactionDetail.amount,
+                              time: transactionDetail.time,
+                              name: widget.reciever_name,
+                            );
                           }
 
                           // ignore: prefer_const_constructors
@@ -209,12 +239,14 @@ class _TransactionDetailsState extends State<TransactionDetails> {
     );
   }
 
-  void _scrollDown() {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: Duration(seconds: 2),
-      curve: Curves.fastOutSlowIn,
-    );
+  void _scrollDown(double value) {
+    _scrollController.jumpTo(value);
+
+    // _scrollController.animateTo(
+    //   _scrollController.position.maxScrollExtent,
+    //   duration: Duration(seconds: 2),
+    //   curve: Curves.fastOutSlowIn,
+    // );
   }
 
   int getNumberOfDays(List<TransactionModel> transactionDetails) {

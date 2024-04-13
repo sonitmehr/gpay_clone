@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gpay_clone/resources/utils.dart';
 import 'package:provider/provider.dart';
 import '../models/user_model.dart' as model;
@@ -12,6 +13,9 @@ class TransactionHistory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.white, // transparent status bar
+    ));
     model.User user = Provider.of<UserProvider>(context).getUser;
     return SafeArea(
       child: Scaffold(

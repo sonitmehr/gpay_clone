@@ -97,6 +97,8 @@ class FireStoreMethods {
         .collection("transaction_history")
         .doc(transaction_id)
         .set(transactionMap);
+    await addTransactionDetailsNew(
+        sender_id, reciever_id, amount, bankingName, hexColor, transaction_id);
 
     return true;
   }
@@ -177,10 +179,17 @@ class FireStoreMethods {
     return transactions;
   }
 
-  Future<bool> addTransactionDetailsNew(String sender_id, String reciever_id,
-      String amount, String bankingName, String hexColor) async {
+  Future<bool> addTransactionDetailsNew(
+      String sender_id,
+      String reciever_id,
+      String amount,
+      String bankingName,
+      String hexColor,
+      String transaction_id) async {
     String time = DateTime.now().toString();
     String name = bankingName.substring(7);
+    DocumentReference senderCollection =
+        _firebaseFirestore.collection("users").doc(sender_id);
     DocumentReference recieverCollection =
         _firebaseFirestore.collection("users").doc(reciever_id);
 
@@ -200,13 +209,7 @@ class FireStoreMethods {
         name: name);
     Map<String, dynamic> transactionMap = transactionModel.toJson();
 
-    DocumentReference transaction =
-        await _firebaseFirestore.collection('transactions').add(transactionMap);
-
-    String transaction_id = transaction.id;
-
-    DocumentReference senderCollection =
-        _firebaseFirestore.collection("users").doc(sender_id);
+    // String transaction_id = transaction.id;
 
     DocumentSnapshot senderTransactionHistoryNew = await senderCollection
         .collection("transaction_history_new")
@@ -217,40 +220,50 @@ class FireStoreMethods {
         .doc(sender_id)
         .get();
     int nextPage = 1;
+    int totalEntriesSenderReciever = 0;
+    int totalEntriesRecieverSender = 0;
+    int totalPages = 0;
     if (senderTransactionHistoryNew.exists) {
       nextPage = (senderTransactionHistoryNew['next_entry_page']);
+      totalEntriesSenderReciever = senderTransactionHistoryNew['total_entries'];
+      totalPages = senderTransactionHistoryNew['total_pages'];
     } else {
       nextPage = 1;
-      await initializePageNo(sender_id, reciever_id);
-    }
-    if (recieverTransactionHistoryNew.exists) {
-      nextPage = (recieverTransactionHistoryNew['next_entry_page']);
-    } else {
+      totalPages = 1;
       await initializePageNo(sender_id, reciever_id);
     }
     transactionMap['hexColor'] = receiverProfileColor;
     transactionMap['name'] = recieverName;
+    await addTransactionFromSenderToReciever(
+        sender_id,
+        reciever_id,
+        transaction_id,
+        nextPage,
+        totalEntriesSenderReciever,
+        totalPages,
+        transactionMap);
 
-    await _firebaseFirestore
-        .collection('users')
-        .doc(sender_id)
-        .collection('transaction_history_new')
-        .doc(reciever_id)
-        .collection(nextPage.toString())
-        .doc(transaction_id)
-        .set(transactionMap);
+    if (recieverTransactionHistoryNew.exists) {
+      nextPage = (recieverTransactionHistoryNew['next_entry_page']);
+      totalEntriesRecieverSender =
+          recieverTransactionHistoryNew['total_entries'];
+      totalPages = recieverTransactionHistoryNew['total_pages'];
+    } else {
+      nextPage = 1;
+      totalPages = 1;
+      await initializePageNo(reciever_id, sender_id);
+    }
 
     transactionMap['hexColor'] = hexColor;
     transactionMap['name'] = bankingName;
-    await _firebaseFirestore
-        .collection('users')
-        .doc(reciever_id)
-        .collection('transaction_history_new')
-        .doc(sender_id)
-        .collection(nextPage.toString())
-        .doc(transaction_id)
-        .set(transactionMap);
-
+    await addTransactionFromSenderToReciever(
+        reciever_id,
+        sender_id,
+        transaction_id,
+        nextPage,
+        totalEntriesRecieverSender,
+        totalPages,
+        transactionMap);
     return true;
   }
 
@@ -275,5 +288,47 @@ class FireStoreMethods {
         .collection('transaction_history_new')
         .doc(receiver_id)
         .set({"total_pages": 1, "total_entries": 1, "next_entry_page": 1});
+  }
+
+  Future<void> addTransactionFromSenderToReciever(
+      String sender_id,
+      String reciever_id,
+      String transaction_id,
+      int next_entry_page,
+      int total_entries,
+      int total_pages,
+      Map<String, dynamic> transactionMap) async {
+    DocumentReference recieverTransactionHistory = _firebaseFirestore
+        .collection('users')
+        .doc(sender_id)
+        .collection('transaction_history_new')
+        .doc(reciever_id);
+
+    // Add Transaction
+
+    int newEntries = total_entries + 1;
+
+    if (newEntries % 5 == 0) {
+      await recieverTransactionHistory.set({
+        "next_entry_page": total_pages + 1,
+        "total_entries": newEntries,
+        "total_pages": total_pages + 1,
+      });
+      await recieverTransactionHistory
+          .collection((total_pages + 1).toString())
+          .doc(transaction_id)
+          .set(transactionMap);
+    } else {
+      // Change pageNo
+      await recieverTransactionHistory.set({
+        "next_entry_page": total_pages,
+        "total_entries": newEntries,
+        "total_pages": total_pages,
+      });
+      await recieverTransactionHistory
+          .collection((total_pages).toString())
+          .doc(transaction_id)
+          .set(transactionMap);
+    }
   }
 }
