@@ -13,9 +13,9 @@ class TransactionHistory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.white, // transparent status bar
-    ));
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarColor: Colors.white, // transparent status bar
+    // ));
     model.User user = Provider.of<UserProvider>(context).getUser;
     return SafeArea(
       child: Scaffold(

@@ -40,8 +40,7 @@ class _ScanPageState extends State<ScanPage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent, // transparent status bar
-      // You can also configure other properties here if needed
+      statusBarColor: Colors.transparent,
     ));
     return Container(
       color: Colors.white,

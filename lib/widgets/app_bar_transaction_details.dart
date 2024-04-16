@@ -75,7 +75,7 @@ class AppBarTransactionDetails extends StatelessWidget
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 17,
-                                fontFamily: 'Product-Sans',
+                                fontFamily: 'Product Sans',
                                 fontWeight: FontWeight.w500),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -105,13 +105,6 @@ class AppBarTransactionDetails extends StatelessWidget
                     }).toList();
                   },
                 ),
-                // GestureDetector(
-                //     onTap: () => _showPopup(context),
-                //     child: Text(total,
-                //         style: const TextStyle(
-                //             color: Colors.black,
-                //             fontSize: 17,
-                //             fontFamily: 'Product-Sans'))),
               ],
             ),
           ),

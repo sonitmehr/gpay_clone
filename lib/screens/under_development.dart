@@ -41,14 +41,6 @@ class _UnderDevelopmentScreenState extends State<UnderDevelopmentScreen> {
                 ),
               ),
             ),
-            SizedBox(
-              width: 20,
-              height: 14,
-              child: SvgPicture.asset(
-                'assets/images/check.svg',
-                fit: BoxFit.fitHeight,
-              ),
-            ),
             ElevatedButton(
                 onPressed: () async {
                   setState(() {

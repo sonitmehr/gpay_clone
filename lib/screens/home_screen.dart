@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gpay_clone/resources/utils.dart';
 import 'package:gpay_clone/screens/home_screen_drawer.dart';
@@ -52,6 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
     model.User user = Provider.of<UserProvider>(context).getUser;
     Color iconbackgroundColor = hexToColor(user.hexColor);
     // final UserProvider userProvider = Provider.of<UserProvider>(context);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ));
     return Scaffold(
       key: _scaffoldKey,
       drawer: const HomeScreenDrawer(),

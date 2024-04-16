@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gpay_clone/models/user_model.dart' as model;
 import 'package:gpay_clone/screens/payment_successful_screen_wrapper.dart';
@@ -107,7 +108,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
     double heightOfTextField = 23;
     double amountFieldSize = 55;
     double variableMaxwidth = fullScreenWidth * multiply;
-
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ));
     return Scaffold(
       resizeToAvoidBottomInset: true,
       floatingActionButton: SizedBox(

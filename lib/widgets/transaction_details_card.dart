@@ -21,7 +21,7 @@ class TransactionDetailsCard extends StatelessWidget {
     return Align(
       alignment: Alignment.centerRight,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8),
         child: Container(
           padding: const EdgeInsets.all(16.0),
           height: 140,
@@ -58,15 +58,15 @@ class TransactionDetailsCard extends StatelessWidget {
                   'Payment to $name',
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'Product-Sans',
+                      fontSize: 17,
+                      fontFamily: 'Product Sans',
                       fontWeight: FontWeight.w500),
                 ),
               ),
               Text(
                 "₹$amount",
                 style:
-                    const TextStyle(fontSize: 32, fontFamily: 'Product-Sans'),
+                    const TextStyle(fontSize: 32, fontFamily: 'Product Sans'),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -74,8 +74,8 @@ class TransactionDetailsCard extends StatelessWidget {
                   Row(
                     children: [
                       SizedBox(
-                        width: 20,
-                        height: 14,
+                        width: 25,
+                        height: 15,
                         child: SvgPicture.asset(
                           'assets/images/secure.svg',
                           // fit: BoxFit.fitHeight,
@@ -84,8 +84,8 @@ class TransactionDetailsCard extends StatelessWidget {
                       Text(
                         "Paid • $timeInNewFormat",
                         style: const TextStyle(
-                            fontSize: 13.5,
-                            fontFamily: 'Product-Sans',
+                            fontSize: 13,
+                            fontFamily: 'Product Sans',
                             fontWeight: FontWeight.w500),
                       ),
                     ],

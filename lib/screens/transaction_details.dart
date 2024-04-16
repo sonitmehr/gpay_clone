@@ -8,8 +8,11 @@ import 'package:gpay_clone/screens/payment_screen.dart';
 import 'package:gpay_clone/screens/under_development.dart';
 import 'package:gpay_clone/services/firestore_methods.dart';
 import 'package:gpay_clone/widgets/app_bar_transaction_details.dart';
+import 'package:gpay_clone/widgets/time_display_line.dart';
 import 'package:gpay_clone/widgets/transaction_details_card.dart';
 import 'package:gpay_clone/widgets/transaction_screen_call_to_action.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/number_symbols_data.dart';
 
 import '../models/transaction_model.dart';
 import '../resources/colors.dart';
@@ -51,7 +54,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
       transactionDetails.add(transactionDetail);
       totalTransactionAmount += toDouble(transactionDetail.amount);
     }
-    transactionDetails.sort((a, b) => a.time.compareTo(b.time));
+    transactionDetails.sort((a, b) => b.time.compareTo(a.time));
+    addTimeDetails(transactionDetails);
     numberOfDays = getNumberOfDays(transactionDetails);
     setState(() {
       isLoading = false;
@@ -108,6 +112,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
       previousScrollPosition = 300;
     }
     transactionDetails.addAll(tempTransactionDetails);
+    addTimeDetails(transactionDetails);
     numberOfDays = getNumberOfDays(transactionDetails);
 
     setState(() {
@@ -128,6 +133,35 @@ class _TransactionDetailsState extends State<TransactionDetails> {
       isLoading = true;
     });
     await _getTransactionDetails();
+  }
+
+  void addTimeDetails(List<TransactionModel> transactionDetails) {
+    if (transactionDetails.isEmpty) return;
+    String prevTime = transactionDetails[0].timeStore;
+    DateTime transactionTime = DateTime.parse(prevTime);
+    prevTime = DateFormat('MMM dd').format(transactionTime);
+    for (int i = 1; i < transactionDetails.length; i++) {
+      String currTime = transactionDetails[i].timeStore;
+      if (transactionDetails[i].isTime == true) {
+        transactionDetails.removeAt(i);
+        continue;
+      }
+      transactionTime = DateTime.parse(currTime);
+      currTime = DateFormat('MMM dd').format(transactionTime);
+
+      if (currTime != prevTime) {
+        TransactionModel timeModel = TransactionModel(
+            amount: "0",
+            sender_id: "",
+            reciever_id: "",
+            time: prevTime,
+            name: "",
+            isTime: true);
+        transactionDetails.insert(i, timeModel);
+      }
+
+      prevTime = currTime;
+    }
   }
 
   @override
@@ -198,6 +232,10 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                           if (index < transactionDetails.length) {
                             TransactionModel transactionDetail =
                                 transactionDetails[index];
+                            if (transactionDetail.isTime) {
+                              return TimeDisplayLine(
+                                  time: transactionDetail.time);
+                            }
                             return TransactionDetailsCard(
                               amount: transactionDetail.amount,
                               time: transactionDetail.time,

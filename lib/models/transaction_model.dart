@@ -1,15 +1,16 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 
 class TransactionModel {
   final String amount;
   final String sender_id;
   final String reciever_id;
   final String time;
+  final String timeStore;
   final String name;
   String uid = "";
+  bool isTime = false;
   TransactionModel({
     required this.amount,
     required this.sender_id,
@@ -17,6 +18,8 @@ class TransactionModel {
     required this.time,
     required this.name,
     this.uid = "",
+    this.isTime = false,
+    this.timeStore = "",
   });
 
   // Factory constructor to create a TransactionModel instance from a map
@@ -49,6 +52,7 @@ class TransactionModel {
         sender_id: data['sender_id'] ?? '',
         reciever_id: data['reciever_id'] ?? '',
         time: data['time'] ?? '',
+        timeStore: data['time'] ?? '',
         name: data['name'] ?? '',
         uid: snapshot.id.toString());
   }
