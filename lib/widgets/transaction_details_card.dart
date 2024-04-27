@@ -6,20 +6,25 @@ class TransactionDetailsCard extends StatelessWidget {
   final String amount;
   final String time;
   final String name;
+  final String recieverID;
+  final String userID;
 
   const TransactionDetailsCard({
     super.key,
     required this.amount,
     required this.time,
     required this.name,
+    required this.recieverID,
+    required this.userID,
   });
 
   @override
   Widget build(BuildContext context) {
     DateTime transactionTime = DateTime.parse(time);
     String timeInNewFormat = DateFormat('MMM dd').format(transactionTime);
+    bool isRecieved = (recieverID == userID) ? true : false;
     return Align(
-      alignment: Alignment.centerRight,
+      alignment: (isRecieved) ? Alignment.centerLeft : Alignment.centerRight,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8),
         child: Container(

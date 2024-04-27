@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../resources/colors.dart';
 import '/resources/colors.dart' as colors;
 
 class UserProfileIcon extends StatelessWidget {
@@ -17,7 +18,7 @@ class UserProfileIcon extends StatelessWidget {
     return SizedBox(
       width: 60,
       child: CircleAvatar(
-        backgroundColor: const Color.fromARGB(0, 189, 192, 190),
+        backgroundColor: iconBorderColor,
         radius: radius + 1,
         child: CircleAvatar(
           radius: radius,

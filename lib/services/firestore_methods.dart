@@ -5,8 +5,6 @@ import 'package:gpay_clone/models/transaction_model.dart';
 import 'package:gpay_clone/models/user_model.dart' as model;
 import 'package:gpay_clone/resources/constants.dart';
 
-import '../resources/utils.dart';
-
 class FireStoreMethods {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   Future<model.User> getUserDetails(String uid) async {
@@ -20,7 +18,7 @@ class FireStoreMethods {
     DocumentSnapshot userDocSnap = await userDoc.get();
     QuerySnapshot recentPeopleSnap =
         await userDoc.collection("recent_people_list").get();
-    return await model.User.fromSnapshot(userDocSnap, recentPeopleSnap);
+    return await model.User.fromSnapshot(userDocSnap, recentPeopleSnap, upiID);
   }
 
   Future<model.User> getUserDetailsFromUpiID(String upiID) async {
@@ -29,7 +27,7 @@ class FireStoreMethods {
     DocumentSnapshot userDocSnap = await userDoc.get();
     QuerySnapshot recentPeopleSnap =
         await userDoc.collection("recent_people_list").get();
-    return await model.User.fromSnapshot(userDocSnap, recentPeopleSnap);
+    return await model.User.fromSnapshot(userDocSnap, recentPeopleSnap, upiID);
   }
 
   Future<bool> addTransactionDetails(String sender_id, String reciever_id,
@@ -75,9 +73,9 @@ class FireStoreMethods {
       senderRecentPeopleCollection.set(updateQuery);
     }
     DocumentReference receiverRecentPeopleCollection =
-        senderCollection.collection("recent_people_list").doc(reciever_id);
+        recieverCollection.collection("recent_people_list").doc(sender_id);
     DocumentSnapshot receiverRecentPeopleSnapshot =
-        await senderRecentPeopleCollection.get();
+        await receiverRecentPeopleCollection.get();
 
     if (receiverRecentPeopleSnapshot.exists) {
       receiverRecentPeopleCollection.update(updateQuery);

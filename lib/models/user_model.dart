@@ -6,16 +6,18 @@ class User {
   final String uid;
   final String name;
   final String hexColor;
+  final String upiID;
   final List<RecentPeople> recentPeopleList;
 
   User({
     required this.uid,
+    required this.upiID,
     required this.name,
     required this.recentPeopleList,
     required this.hexColor,
   });
-  static Future<User> fromSnapshot(
-      DocumentSnapshot snapshot, QuerySnapshot recentPeople) async {
+  static Future<User> fromSnapshot(DocumentSnapshot snapshot,
+      QuerySnapshot recentPeople, String upiID) async {
     String uid = snapshot.id;
     String name = snapshot['name'] ?? '';
     String hexColor = snapshot['hexColor'] ?? '#760e7d';
@@ -23,13 +25,19 @@ class User {
         await RecentPeople.fromSnapShot(recentPeople);
     return User(
         uid: uid,
+        upiID: upiID,
         name: name,
         recentPeopleList: recentPeopleList,
         hexColor: hexColor);
   }
 
   factory User.empty() {
-    return User(uid: '', name: 'T', recentPeopleList: [], hexColor: '#760e7d');
+    return User(
+        uid: '',
+        name: 'T',
+        recentPeopleList: [],
+        hexColor: '#760e7d',
+        upiID: "");
   }
 }
 

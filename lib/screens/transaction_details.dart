@@ -3,6 +3,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:gpay_clone/models/user_model.dart';
+import 'package:gpay_clone/providers/user_providers.dart';
 import 'package:gpay_clone/resources/utils.dart';
 import 'package:gpay_clone/screens/payment_screen.dart';
 import 'package:gpay_clone/screens/under_development.dart';
@@ -12,7 +14,7 @@ import 'package:gpay_clone/widgets/time_display_line.dart';
 import 'package:gpay_clone/widgets/transaction_details_card.dart';
 import 'package:gpay_clone/widgets/transaction_screen_call_to_action.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/number_symbols_data.dart';
+import 'package:provider/provider.dart';
 
 import '../models/transaction_model.dart';
 import '../resources/colors.dart';
@@ -182,6 +184,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
 
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<UserProvider>(context).getUser;
+
     return Scaffold(
       persistentFooterButtons: [
         SizedBox(
@@ -212,23 +216,16 @@ class _TransactionDetailsState extends State<TransactionDetails> {
           : Column(
               children: [
                 Expanded(
-                  // child: PagedListView(
-                  //   pagingController: _pagingController,
-                  //   builderDelegate: PagedChildBuilderDelegate(
-                  //       itemBuilder: (context, item, index) => Text('Hello')),
-                  // ),
                   child: SingleChildScrollView(
                     controller: _scrollController,
                     child: ListView.builder(
                         shrinkWrap: true,
                         reverse: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        // physics: const PositionRetainedScrollPhysics(),
                         itemCount: (isMore)
                             ? transactionDetails.length + 1
                             : transactionDetails.length,
                         itemBuilder: (context, index) {
-                          // return Text("Hello $index");
                           if (index < transactionDetails.length) {
                             TransactionModel transactionDetail =
                                 transactionDetails[index];
@@ -240,12 +237,14 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                               amount: transactionDetail.amount,
                               time: transactionDetail.time,
                               name: widget.reciever_name,
+                              recieverID: transactionDetail.reciever_id,
+                              userID: user.upiID,
                             );
                           }
 
                           // ignore: prefer_const_constructors
                           return Padding(
-                              padding: EdgeInsets.all(16),
+                              padding: const EdgeInsets.all(16),
                               child: const Center(
                                   child: CircularProgressIndicator(
                                 color: primaryColor,

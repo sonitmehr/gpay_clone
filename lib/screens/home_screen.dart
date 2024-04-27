@@ -31,6 +31,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  double recentPeopleHeight = 130;
+  bool isExpanded = false;
 
   @override
   void initState() {
@@ -44,6 +46,17 @@ class _HomeScreenState extends State<HomeScreen> {
     _userProvider.refreshUser();
   }
 
+  int getRecentPeopleHeight() {
+    model.User user = Provider.of<UserProvider>(context).getUser;
+    int len = user.recentPeopleList.length;
+    int rows = 1;
+    if (len > 4) {
+      rows = (len / 4).ceil();
+    }
+    print(rows);
+    return 120 * rows;
+  }
+
   @override
   Widget build(BuildContext context) {
     double fullScreenWidth = MediaQuery.of(context).size.width;
@@ -52,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
     double iconHeight = 90;
     model.User user = Provider.of<UserProvider>(context).getUser;
     Color iconbackgroundColor = hexToColor(user.hexColor);
+    recentPeopleHeight = getRecentPeopleHeight().toDouble();
     // final UserProvider userProvider = Provider.of<UserProvider>(context);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -96,6 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: fullScreenHeight * 0.24,
                   child: GridView.count(
+                    physics: const NeverScrollableScrollPhysics(),
                     crossAxisCount: 4, // Number of columns
                     childAspectRatio: 1.0, // Aspect ratio
                     padding: EdgeInsets.symmetric(
@@ -153,14 +168,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       )),
                 ),
                 SizedBox(
-                  height: fullScreenHeight * 0.062,
+                  height: fullScreenHeight * 0.04,
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: fullScreenWidth * 0.061,
-                        vertical: fullScreenHeight * 0.019),
+                      horizontal: fullScreenWidth * 0.061,
+                    ),
                     child: const Text(
                       'People',
                       style:
@@ -168,10 +183,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: fullScreenHeight * 0.186,
-                    child: const RecentPeople()),
+                // Expanded(child: RecentPeople()),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: recentPeopleHeight,
+                      child: RecentPeople(
+                        isExpanded: isExpanded,
+                      )),
+                ),
                 ArrowListTile(
                   icon: const Icon(
                     Icons.history,
